@@ -49,7 +49,15 @@ public class KeyboardMovement : MonoBehaviour
 
     public GameObject JoyStick;
 
-    
+    public SerialController serialController;
+
+
+    public GameObject pauseMenu;
+
+    public GameObject Start_Button;
+    public GameObject Select_Button;
+
+
 
     // Start is called before the first frame update
     void Start()
@@ -59,47 +67,114 @@ public class KeyboardMovement : MonoBehaviour
         GreenGround.GetComponent<MeshCollider>().enabled = true;
         RedGround.GetComponent<MeshCollider>().enabled = false;
         PurpleGround.GetComponent<MeshCollider>().enabled = false;
+
+        serialController = GameObject.Find("SerialController").GetComponent<SerialController>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKey(KeyCode.V))
+        {
+            Debug.Log("Lefty");
+        }
+
+        string message = serialController.ReadSerialMessage();
+
+
+        //if (message == null)
+        //    return;
+
+
+        //// Check if the message is plain data or a connect/disconnect event.
+        //if (ReferenceEquals(message, SerialController.SERIAL_DEVICE_CONNECTED))
+        //    Debug.Log("Connection established");
+        //else if (ReferenceEquals(message, SerialController.SERIAL_DEVICE_DISCONNECTED))
+        //    Debug.Log("Connection attempt failed or disconnection detected");
+        //else
+        //{
+        //    Debug.Log("Message arrived: " + message);
+
+        //}
+
+
+        if ((Input.GetKeyDown(KeyCode.Escape) || message == "START") && pauseMenu.activeInHierarchy == false)
+        {
+            Start_Button.GetComponent<Renderer>().material = red;
+            Select_Button.GetComponent<Renderer>().material = red;
+
+            pauseMenu.SetActive(true);
+            Time.timeScale = 0.0f;
+        }
+        else if ((Input.GetKeyDown(KeyCode.Escape) || message == "START") && pauseMenu.activeInHierarchy == true)
+        {
+            Start_Button.GetComponent<Renderer>().material = white;
+            Select_Button.GetComponent<Renderer>().material = white;
+
+            pauseMenu.SetActive(false);
+            Time.timeScale = 1.0f;
+        }
+
+
+
+        if (Input.GetKeyDown(KeyCode.Space) || message == "X" && isGrounded)
+        {
+            X_Button.GetComponent<Renderer>().material = red;
+            isJumping = true;
+        }
+        
+
+
+        //if (Input.GetKeyDown(KeyCode.Space) || message == "X" && isGrounded)
+        //{
+        //    X_Button.GetComponent<Renderer>().material = red;
+        //    isJumping = true;
+        //    Debug.Log("REACHED HERE");
+        //}
+        //if (Input.GetKeyUp(KeyCode.Space) || (message == "X" && isJumping))
+        //{
+
+        //    isJumping = false;
+        //    X_Button.GetComponent<Renderer>().material = white;
+        //}
+
         //Input
-        if (Input.GetKey(KeyCode.A))
+        if (Input.GetKey(KeyCode.A) || message == "LEFT")
         {
             //transform.Translate(Vector3.left * speed * Time.deltaTime);
             rb.velocity = new Vector3(-1 * speed, rb.velocity.y, rb.velocity.z);
             JoyStick.GetComponent<Renderer>().material = red;
         }
-        else if (Input.GetKeyUp(KeyCode.A))
+        else if (Input.GetKeyUp(KeyCode.A) || message == "STOP HORIZONTAL")
         {
             rb.velocity = new Vector3(0, rb.velocity.y, rb.velocity.z);
             JoyStick.GetComponent<Renderer>().material = white;
         }
 
-        if (Input.GetKey(KeyCode.D))
+        if (Input.GetKey(KeyCode.D) || message == "RIGHT")
         {
             //transform.Translate(Vector3.left * speed * Time.deltaTime);
             rb.velocity = new Vector3(1 * speed, rb.velocity.y, rb.velocity.z);
             JoyStick.GetComponent<Renderer>().material = red;
         }
-        else if (Input.GetKeyUp(KeyCode.D))
+        else if (Input.GetKeyUp(KeyCode.D) || message == "STOP HORIZONTAL")
         {
             rb.velocity = new Vector3(0, rb.velocity.y, rb.velocity.z);
             JoyStick.GetComponent<Renderer>().material = white;
         }
 
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
-        {
-            X_Button.GetComponent<Renderer>().material = red;
-            isJumping = true;
-        }
-        if (Input.GetKeyUp(KeyCode.Space))
-        {
+        //if (Input.GetKeyDown(KeyCode.Space) || message == "X" && isGrounded)
+        //{
+        //    X_Button.GetComponent<Renderer>().material = red;
+        //    isJumping = true;
+        //    Debug.Log("REACHED HERE");
+        //}
+        //if (Input.GetKeyUp(KeyCode.Space) || message == "X")
+        //{
 
-            isJumping = false;
-            X_Button.GetComponent<Renderer>().material = white;
-        }
+        //    isJumping = false;
+        //    X_Button.GetComponent<Renderer>().material = white;
+        //}
 
         if (Input.GetKeyDown(KeyCode.RightArrow) && dashCount < 1)
         {
@@ -158,7 +233,7 @@ public class KeyboardMovement : MonoBehaviour
 
 
         //Change Material
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        if (Input.GetKeyDown(KeyCode.Alpha1) || message == "SQUARE")
         {
             this.gameObject.GetComponent<Renderer>().material = green;
             GreenGround.GetComponent<MeshCollider>().enabled = true;
@@ -167,12 +242,12 @@ public class KeyboardMovement : MonoBehaviour
 
             Square_Button.GetComponent<Renderer>().material = red;
         }
-        else if(Input.GetKeyUp(KeyCode.Alpha1))
+        else if(Input.GetKeyUp(KeyCode.Alpha1) || message == "SQUARE BUFFER")
         {
             Square_Button.GetComponent<Renderer>().material = white;
         }
             
-        if (Input.GetKeyDown(KeyCode.Alpha2))
+        if (Input.GetKeyDown(KeyCode.Alpha2) || message == "TRIANGLE")
         {
             this.gameObject.GetComponent<Renderer>().material = red;
             GreenGround.GetComponent<MeshCollider>().enabled = false;
@@ -180,12 +255,12 @@ public class KeyboardMovement : MonoBehaviour
             PurpleGround.GetComponent<MeshCollider>().enabled = false;
             Triangle_Button.GetComponent<Renderer>().material = red;
         }
-        else if (Input.GetKeyUp(KeyCode.Alpha2))
+        else if (Input.GetKeyUp(KeyCode.Alpha2) || message == "TRIANGLE BUFFER")
         {
             Triangle_Button.GetComponent<Renderer>().material = white;
         }
 
-        if (Input.GetKeyDown(KeyCode.Alpha3))
+        if (Input.GetKeyDown(KeyCode.Alpha3) || message == "CIRCLE")
         {
             this.gameObject.GetComponent<Renderer>().material = purple;
             GreenGround.GetComponent<MeshCollider>().enabled = false;
@@ -193,7 +268,7 @@ public class KeyboardMovement : MonoBehaviour
             PurpleGround.GetComponent<MeshCollider>().enabled = true;
             O_Button.GetComponent<Renderer>().material = red;
         }
-        else if (Input.GetKeyUp(KeyCode.Alpha3))
+        else if (Input.GetKeyUp(KeyCode.Alpha3) || message == "CIRCLE BUFFER")
         {
             O_Button.GetComponent<Renderer>().material = white;
         }
@@ -215,7 +290,9 @@ public class KeyboardMovement : MonoBehaviour
         {
             rb.AddForce(0, 0, 0);
             rb.AddForce(Vector3.down * 200 * Time.deltaTime, ForceMode.Impulse);
-            Debug.Log(rb.velocity.y.ToString());
+
+            X_Button.GetComponent<Renderer>().material = white;
+            //Debug.Log(rb.velocity.y.ToString());
         }
 
         //if (rightDash == true)
