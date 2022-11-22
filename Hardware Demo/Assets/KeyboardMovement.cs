@@ -74,31 +74,10 @@ public class KeyboardMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKey(KeyCode.V))
-        {
-            Debug.Log("Lefty");
-        }
-
         string message = serialController.ReadSerialMessage();
 
 
-        //if (message == null)
-        //    return;
-
-
-        //// Check if the message is plain data or a connect/disconnect event.
-        //if (ReferenceEquals(message, SerialController.SERIAL_DEVICE_CONNECTED))
-        //    Debug.Log("Connection established");
-        //else if (ReferenceEquals(message, SerialController.SERIAL_DEVICE_DISCONNECTED))
-        //    Debug.Log("Connection attempt failed or disconnection detected");
-        //else
-        //{
-        //    Debug.Log("Message arrived: " + message);
-
-        //}
-
-
-        if ((Input.GetKeyDown(KeyCode.Escape) || message == "START") && pauseMenu.activeInHierarchy == false)
+        if ((Input.GetKeyDown(KeyCode.Escape) || message == "START" || message == "SELECT") && pauseMenu.activeInHierarchy == false)
         {
             Start_Button.GetComponent<Renderer>().material = red;
             Select_Button.GetComponent<Renderer>().material = red;
@@ -106,7 +85,7 @@ public class KeyboardMovement : MonoBehaviour
             pauseMenu.SetActive(true);
             Time.timeScale = 0.0f;
         }
-        else if ((Input.GetKeyDown(KeyCode.Escape) || message == "START") && pauseMenu.activeInHierarchy == true)
+        else if ((Input.GetKeyDown(KeyCode.Escape) || message == "START" || message == "SELECT") && pauseMenu.activeInHierarchy == true)
         {
             Start_Button.GetComponent<Renderer>().material = white;
             Select_Button.GetComponent<Renderer>().material = white;
@@ -124,19 +103,6 @@ public class KeyboardMovement : MonoBehaviour
         }
         
 
-
-        //if (Input.GetKeyDown(KeyCode.Space) || message == "X" && isGrounded)
-        //{
-        //    X_Button.GetComponent<Renderer>().material = red;
-        //    isJumping = true;
-        //    Debug.Log("REACHED HERE");
-        //}
-        //if (Input.GetKeyUp(KeyCode.Space) || (message == "X" && isJumping))
-        //{
-
-        //    isJumping = false;
-        //    X_Button.GetComponent<Renderer>().material = white;
-        //}
 
         //Input
         if (Input.GetKey(KeyCode.A) || message == "LEFT")
@@ -163,31 +129,9 @@ public class KeyboardMovement : MonoBehaviour
             JoyStick.GetComponent<Renderer>().material = white;
         }
 
-        //if (Input.GetKeyDown(KeyCode.Space) || message == "X" && isGrounded)
-        //{
-        //    X_Button.GetComponent<Renderer>().material = red;
-        //    isJumping = true;
-        //    Debug.Log("REACHED HERE");
-        //}
-        //if (Input.GetKeyUp(KeyCode.Space) || message == "X")
-        //{
 
-        //    isJumping = false;
-        //    X_Button.GetComponent<Renderer>().material = white;
-        //}
-
-        if (Input.GetKeyDown(KeyCode.RightArrow) && dashCount < 1)
+        if (Input.GetKeyDown(KeyCode.RightArrow) || message == "RIGHT TRIGGER" && dashCount < 1)
         {
-            //isDashing = true;
-            //Vector3 startPos = new Vector3(transform.position.x, transform.position.y, transform.position.z);
-            //Vector3 endPos = new Vector3(transform.position.x + 120, transform.position.y, transform.position.z);
-            //timer += Time.deltaTime;
-
-
-            ////transform.Translate(Vector3.right* dashForce * Time.deltaTime);
-
-            //transform.position = Vector3.Lerp(startPos, endPos, 5 * Time.deltaTime);
-            //timer = 0.0f;
             dashCount++;
 
 
@@ -196,19 +140,9 @@ public class KeyboardMovement : MonoBehaviour
             R_Trigger.GetComponent<Renderer>().material = red;
         }
 
-        else if (Input.GetKeyDown(KeyCode.LeftArrow) && dashCount < 1)
+        else if (Input.GetKeyDown(KeyCode.LeftArrow) || message == "LEFT TRIGGER" && dashCount < 1)
         {
-            //isDashing = true;
-            //Vector3 startPos = new Vector3(transform.position.x, transform.position.y, transform.position.z);
-            //Vector3 endPos = new Vector3(transform.position.x - 120, transform.position.y, transform.position.z);
-            ////timer += Time.deltaTime;
-
-
-            ////transform.Translate(Vector3.right* dashForce * Time.deltaTime);
-
-            //transform.position = Vector3.Lerp(startPos, endPos, 5 * Time.deltaTime);
            
-
             dashCount++;
 
 
@@ -255,7 +189,6 @@ public class KeyboardMovement : MonoBehaviour
             PurpleGround.GetComponent<MeshCollider>().enabled = false;
             Triangle_Button.GetComponent<Renderer>().material = red;
         }
-        else if (Input.GetKeyUp(KeyCode.Alpha2) || message == "TRIANGLE BUFFER")
         {
             Triangle_Button.GetComponent<Renderer>().material = white;
         }
@@ -281,7 +214,7 @@ public class KeyboardMovement : MonoBehaviour
     {
         if (isJumping)
         {
-            rb.velocity = new Vector3(0, jumpForce, 0);
+            rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
             isGrounded = false;
             isJumping = false;
         }
@@ -294,11 +227,6 @@ public class KeyboardMovement : MonoBehaviour
             X_Button.GetComponent<Renderer>().material = white;
             //Debug.Log(rb.velocity.y.ToString());
         }
-
-        //if (rightDash == true)
-        //{
-        //    rb.AddForce(Vector3.right * dashForce * Time.deltaTime, ForceMode.Impulse);
-        //}
             
     }
 
@@ -317,8 +245,6 @@ public class KeyboardMovement : MonoBehaviour
             GreenGround.GetComponent<MeshCollider>().enabled = true;
             RedGround.GetComponent<MeshCollider>().enabled = false;
             PurpleGround.GetComponent<MeshCollider>().enabled = false;
-
-            //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
 
     }
