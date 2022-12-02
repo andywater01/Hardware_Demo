@@ -189,6 +189,7 @@ public class KeyboardMovement : MonoBehaviour
             PurpleGround.GetComponent<MeshCollider>().enabled = false;
             Triangle_Button.GetComponent<Renderer>().material = red;
         }
+        else if (Input.GetKeyUp(KeyCode.Alpha2) || message == "TRIANGLE BUFFER")
         {
             Triangle_Button.GetComponent<Renderer>().material = white;
         }
