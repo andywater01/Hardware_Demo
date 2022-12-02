@@ -1,2 +1,4 @@
 # Hardware_Demo
-YouTube Presentation Link: <https://youtu.be/sD58iVqvT0A>
+Presentation + Demo Link: <https://youtu.be/EIk9sizQYQo>
+
+Exploded View Animation Link: <https://youtu.be/zRmB2IQ1TKk>
